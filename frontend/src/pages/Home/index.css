@@ -1,0 +1,94 @@
+.pageHome {
+  min-height: 100vh;
+  background: #ebebeb;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 16px;
+}
+
+.containerCard {
+  background: #fff;
+  border-radius: 10px;
+  padding: 32px 28px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+#containerTitle {
+  font-size: 20px;
+  color: #000000;
+  margin-bottom: 50px;
+  font-weight: 600;
+}
+
+#userAvatar {
+  width: 64px;
+  height: 64px;
+  background: #ddd;
+  border-radius: 50%;
+  margin: 0 auto 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#containerSubtitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.largeInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  outline: none;
+  box-sizing: border-box;
+  color: #333;
+}
+
+.inputsLine {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.halfInput {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+  min-width: 0;
+  background: white;
+  color: #333;
+}
+
+.containerButton {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 11px 28px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
