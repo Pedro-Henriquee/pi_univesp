@@ -1,4 +1,5 @@
 import "./index.css";
+import { NavLink } from "react-router-dom";
 
 function Sidebar({ ativo }) {
   const itensMenu = [

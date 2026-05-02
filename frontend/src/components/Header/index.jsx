@@ -23,9 +23,12 @@ function Header({ title, previousScreen, nextScreen, usuario = null }) {
         <div className="usuarioContainer">
           <div className="usuarioText">
             <span id="usuarioNome">{usuario.nome}</span>
-            <button id="btnAction" onClick={() => navigate("/")}>
-              Ver perfil
-            </button>
+            <button
+  id="btnAction"
+  onClick={() => navigate(`/perfil/${usuario.id || 32}`)}
+>
+  Ver perfil
+</button>
           </div>
 
           <div id="avatarUsuario">
@@ -38,3 +41,4 @@ function Header({ title, previousScreen, nextScreen, usuario = null }) {
 }
 
 export default Header;
+
