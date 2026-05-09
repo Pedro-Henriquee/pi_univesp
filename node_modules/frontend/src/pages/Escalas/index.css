@@ -1,0 +1,215 @@
+.escalasContainer {
+  max-width: 860px;
+}
+
+.escalaTituloLinha {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+.escalaTituloLinha h1 {
+  color: #000;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.btnAdicionar {
+  padding: 10px 20px;
+  background: #3b9fd1;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btnCancelar {
+  padding: 10px 16px;
+  background: #999;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btnEditar {
+  width: 100px;
+  height: 28px;
+  background: #333840;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btnExcluir {
+  width: 100px;
+  height: 28px;
+  background: #a30f16;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.escalaCard {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 38px;
+}
+
+.escalaCardTopo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 20px;
+}
+
+.escalaCardTopo h2 {
+  color: #202020;
+  font-size: 20px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.escalaCardAcoes {
+  display: flex;
+  gap: 42px;
+  padding-right: 10px;
+}
+
+.escalaTabela {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.escalaTabela thead {
+  background: #dcdce0;
+}
+
+.escalaTabela th,
+.escalaTabela td {
+  padding: 18px 20px;
+  text-align: left;
+  font-size: 14px;
+  border-top: 1px solid #e1e1e1;
+}
+
+.escalaTabela th {
+  color: #111;
+  font-weight: 700;
+}
+
+.escalaTabela td {
+  color: #111;
+}
+
+.escalaVazia {
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+  padding: 28px;
+}
+
+.escalaCadastroContainer {
+  max-width: 620px;
+}
+
+.escalaSelect {
+  width: 490px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  background: white;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.escalaFormulario {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.escalaDiaForm {
+  display: grid;
+  grid-template-columns: 180px 200px 200px 90px;
+  gap: 18px;
+  align-items: center;
+}
+
+.escalaDiaForm > label:first-child {
+  grid-column: 1 / -1;
+  color: #111;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.escalaDiaForm input[type="time"] {
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  background: white;
+  color: #333;
+}
+
+.escalaDiaForm input[type="time"]:disabled {
+  color: #999;
+  background: #f1f1f1;
+}
+
+.folgaCheck {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #111;
+  font-size: 13px;
+}
+
+.folgaCheck input {
+  width: 14px;
+  height: 14px;
+}
+
+.escalaFormularioAcoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+@media (max-width: 900px) {
+  .escalasContainer,
+  .escalaCadastroContainer {
+    max-width: 100%;
+  }
+
+  .escalaCardTopo,
+  .escalaTituloLinha {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .escalaCardAcoes {
+    gap: 12px;
+    padding-right: 0;
+  }
+
+  .escalaSelect {
+    width: 100%;
+  }
+
+  .escalaDiaForm {
+    grid-template-columns: 1fr;
+  }
+}
