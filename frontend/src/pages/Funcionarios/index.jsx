@@ -1,20 +1,15 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
-import Sidebar from "../../components/Sidebar";
+import Layout from "../../components/Layout";
 import api from "../../services/api";
 import "./index.css";
 
 function Funcionarios() {
-  const navigate = useNavigate();
   const [funcionarios, setFuncionarios] = useState([]);
   const [editandoId, setEditandoId] = useState(null);
-  const [busca, setBusca] = useState("");
   const inputNomeFiltro = useRef(null);
   const inputNome = useRef(null);
   const inputCargo = useRef(null);
   const inputUsuario = useRef(null);
-
 
   function validateFields() {
     if (!inputNome.current.value || !inputCargo.current.value) {
@@ -100,89 +95,91 @@ function Funcionarios() {
   }
 
   useEffect(() => {
-    carregarFuncionarios();
+    let ativo = true;
+
+    api.get("/funcionarios").then(({ data }) => {
+      if (ativo) {
+        setFuncionarios(data);
+      }
+    });
+
+    return () => {
+      ativo = false;
+    };
   }, []);
 
   return (
-    <div className="funcionariosPage">
-      <Header
-        title="Gestão - Funcionários"
-        previousScreen={() => navigate(-1)}
-        usuario={{ nome: "Gerente"}}
-      />
-
-      <div className="funcionariosContent">
-        <Sidebar ativo="Gestão de Funcionários" />
-
-        <div className="funcionariosContainer">
-          <div className="buscaContainer">
-            <label className="buscaLabel">Buscar Funcionário</label>
-            <div className="buscaInputContainer">
-              <span className="buscaIcone">🔍</span>
-              <input
-                className="buscaInput"
-                type="text"
-                placeholder="Nome do funcionário"
-                ref={inputNomeFiltro}
-                onChange={buscarFuncionario}
-              />
-            </div>
+    <Layout title="Gestão - Funcionários" ativo="Gestão de Funcionários">
+      <div className="funcionariosContainer">
+        <div className="buscaContainer">
+          <label className="buscaLabel">Buscar Funcionário</label>
+          <div className="buscaInputContainer">
+            <span className="buscaIcone">🔍</span>
+            <input
+              className="buscaInput"
+              type="text"
+              placeholder="Nome do funcionário"
+              ref={inputNomeFiltro}
+              onChange={buscarFuncionario}
+            />
           </div>
+        </div>
 
-          <h2 className="titleSection">
-            {editandoId ? "Editar funcionário" : "Adicionar funcionários"}
-          </h2>
+        <h2 className="titleSection">
+          {editandoId ? "Editar funcionário" : "Adicionar funcionários"}
+        </h2>
 
-          <div className="inputsContainer">
-            <input
-              className="inputForm"
-              name="nome"
-              placeholder="Nome *"
-              ref={inputNome}
-            />
-            <input
-              className="inputForm"
-              name="cargo"
-              placeholder="Cargo *"
-              ref={inputCargo}
-            /><input
-              className="inputForm"
-              name="usuario"
-              placeholder="Usuário (opcional)"
-              ref={inputUsuario}
-            />
-            <button className="btnAdicionar" onClick={gravarFuncionario}>
-              {editandoId ? "Salvar" : "Adicionar"}
+        <div className="inputsContainer">
+          <input
+            className="inputForm"
+            name="nome"
+            placeholder="Nome *"
+            ref={inputNome}
+          />
+          <input
+            className="inputForm"
+            name="cargo"
+            placeholder="Cargo *"
+            ref={inputCargo}
+          /><input
+            className="inputForm"
+            name="usuario"
+            placeholder="Usuário (opcional)"
+            ref={inputUsuario}
+          />
+          <button className="btnAdicionar" onClick={gravarFuncionario}>
+            {editandoId ? "Salvar" : "Adicionar"}
+          </button>
+          {editandoId && (
+            <button className="btnCancelar" onClick={limparCampos}>
+              Cancelar
             </button>
-            {editandoId && (
-              <button className="btnCancelar" onClick={limparCampos}>
-                Cancelar
-              </button>
-            )}
-          </div>
+          )}
+        </div>
 
-          <table className="tabela">
-            <thead>
-              <tr className="tabelaHeader">
-                <th className="th">Nome</th>
-                <th className="th">Cargo</th>
-                <th className="th">Usuário</th>
-                <th className="th">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {funcionarios.map((funcionario) => (
-                <tr key={funcionario.id} className="tabelaLinha">
-                  <td className="td">{funcionario.nome}{funcionario.is_admin && <span className="adminBadge"> (ADMIN) </span>}</td>
-                  <td className={`td ${!funcionario.cargo ? "semCargo" : ""}`}>
-                    {funcionario.cargo || "SEM CARGO"}
-                  </td>
-                  <td
-                    className={`td ${!funcionario.username ? "naoAutenticado" : ""}`}
-                  >
-                    {funcionario.username || "NÃO CADASTRADO"}
-                  </td>
-                  <td className="td acoes">
+        <table className="tabela">
+          <thead>
+            <tr className="tabelaHeader">
+              <th className="th">Nome</th>
+              <th className="th">Cargo</th>
+              <th className="th">Usuário</th>
+              <th className="th">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {funcionarios.map((funcionario) => (
+              <tr key={funcionario.id} className="tabelaLinha">
+                <td className="td">{funcionario.nome}{funcionario.is_admin && <span className="adminBadge"> (ADMIN) </span>}</td>
+                <td className={`td ${!funcionario.cargo ? "semCargo" : ""}`}>
+                  {funcionario.cargo || "SEM CARGO"}
+                </td>
+                <td
+                  className={`td ${!funcionario.username ? "naoAutenticado" : ""}`}
+                >
+                  {funcionario.username || "NÃO CADASTRADO"}
+                </td>
+                <td className="td">
+                  <div className="acoes">
                     {funcionario.username && !funcionario.is_admin ? (
                       <button
                         className="btnAdmin"
@@ -203,14 +200,14 @@ function Funcionarios() {
                     >
                       Excluir
                     </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </div>
+    </Layout>
   );
 }
 

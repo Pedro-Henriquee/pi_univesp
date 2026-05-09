@@ -1,43 +1,18 @@
-.escalasPage {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #f5f5f5;
-}
-
-.escalasContent {
-  display: flex;
-  flex: 1;
-}
-
 .escalasContainer {
-  flex: 1;
-  padding: 20px 50px;
-  background: #f5f5f5;
+  max-width: 860px;
 }
 
-.titleSection {
+.escalaTituloLinha {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+.escalaTituloLinha h1 {
+  color: #000;
   font-size: 30px;
   font-weight: 800;
-  color: #222;
-  margin-bottom: 100px;
-}
-
-.inputsContainer {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 28px;
-  flex-wrap: wrap;
-}
-
-.inputForm {
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-  width: 200px;
-  outline: none;
 }
 
 .btnAdicionar {
@@ -61,133 +36,180 @@
   cursor: pointer;
 }
 
-.tabela {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
-
-.tabelaHeader {
-  background: #e8e8e8;
-}
-
-.th {
-  padding: 12px 16px;
-  text-align: left;
-  font-size: 14px;
-  font-weight: 600;
-  color: #444;
-}
-
-.tabelaLinha {
-  border-top: 1px solid #eee;
-}
-
-.td {
-  padding: 12px 16px;
-  font-size: 14px;
-  color: #333;
-}
-
-.acoes {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
 .btnEditar {
-  padding: 6px 10px;
-  background: #4a4a4a;
+  width: 100px;
+  height: 28px;
+  background: #333840;
   color: #fff;
   border: none;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 5px;
+  font-size: 13px;
   cursor: pointer;
 }
 
 .btnExcluir {
-  padding: 6px 10px;
-  background: #c0392b;
+  width: 100px;
+  height: 28px;
+  background: #a30f16;
   color: #fff;
   border: none;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 5px;
+  font-size: 13px;
   cursor: pointer;
 }
 
-.folgaBadge {
-  background: #e0f2fe;
-  color: #0369a1;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
+.escalaCard {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 38px;
 }
 
-.trabalhoBadge {
-  background: #dcfce7;
-  color: #166534;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.btnExcluirSemana {
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-left: 10px;
+.escalaCardTopo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 20px;
 }
 
-.btnExcluirSemana:hover {
-  background-color: #5a6268;
+.escalaCardTopo h2 {
+  color: #202020;
+  font-size: 20px;
+  font-weight: 500;
+  text-transform: uppercase;
 }
 
-.btnSalvarSemana {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 4px;
+.escalaCardAcoes {
+  display: flex;
+  gap: 42px;
+  padding-right: 10px;
 }
 
-.tabela input[type="time"] {
-  border: none;            /* remove borda */
-  background: transparent; /* fundo transparente */
+.escalaTabela {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.escalaTabela thead {
+  background: #dcdce0;
+}
+
+.escalaTabela th,
+.escalaTabela td {
+  padding: 18px 20px;
+  text-align: left;
   font-size: 14px;
+  border-top: 1px solid #e1e1e1;
+}
+
+.escalaTabela th {
+  color: #111;
+  font-weight: 700;
+}
+
+.escalaTabela td {
+  color: #111;
+}
+
+.escalaVazia {
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+  padding: 28px;
+}
+
+.escalaCadastroContainer {
+  max-width: 620px;
+}
+
+.escalaSelect {
+  width: 490px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  background: white;
   color: #333;
-  outline: none;
-  padding: 0;
+  margin-bottom: 20px;
 }
 
-/* Quando o campo estiver desabilitado (folga marcada) */
-.tabela input[type="time"]:disabled {
-  color: #aaa;             /* cinza claro */
-  cursor: not-allowed;     /* indica que não pode editar */
+.escalaFormulario {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-/* Linha de folga com fundo suave */
-.linhaFolga {
-  background-color: #f0aaaa; /* cinza bem claro */
-  color: #2957b2;              /* texto mais suave */
+.escalaDiaForm {
+  display: grid;
+  grid-template-columns: 180px 200px 200px 90px;
+  gap: 18px;
+  align-items: center;
 }
 
-.btnSalvarSemana::before {
-  content: "💾 "; /* ícone de salvar */
+.escalaDiaForm > label:first-child {
+  grid-column: 1 / -1;
+  color: #111;
+  font-size: 13px;
+  font-weight: 700;
 }
 
-.btnExcluirSemana::before {
-  content: "🗑️ "; /* ícone de lixeira */
+.escalaDiaForm input[type="time"] {
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  background: white;
+  color: #333;
 }
 
-.btnExcluir::before {
-  content: "🗑️ "; /* ícone de excluir linha */
+.escalaDiaForm input[type="time"]:disabled {
+  color: #999;
+  background: #f1f1f1;
 }
 
+.folgaCheck {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #111;
+  font-size: 13px;
+}
+
+.folgaCheck input {
+  width: 14px;
+  height: 14px;
+}
+
+.escalaFormularioAcoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+@media (max-width: 900px) {
+  .escalasContainer,
+  .escalaCadastroContainer {
+    max-width: 100%;
+  }
+
+  .escalaCardTopo,
+  .escalaTituloLinha {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .escalaCardAcoes {
+    gap: 12px;
+    padding-right: 0;
+  }
+
+  .escalaSelect {
+    width: 100%;
+  }
+
+  .escalaDiaForm {
+    grid-template-columns: 1fr;
+  }
+}

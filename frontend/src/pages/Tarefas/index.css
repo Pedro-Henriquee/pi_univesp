@@ -1,3 +1,15 @@
+.tarefasPage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+.tarefasContent {
+  display: flex;
+  flex: 1;
+}
+
 .containerTarefas {
   display: flex;
   flex-direction: column;
@@ -24,13 +36,11 @@
   border-radius: 5px;
 }
 
-/* TÍTULO */
 .tituloSecao {
   font-size: 22px;
   font-weight: 600;
 }
 
-/* FORM */
 .formTarefa {
   display: flex;
   align-items: center;
@@ -63,13 +73,14 @@
 }
 
 .btnAdicionar {
-  background: #3b82b1;
-  color: white;
+  padding: 10px 20px;
+  background: #3b9fd1;
+  color: #fff;
   border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
-  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
   font-weight: 500;
+  cursor: pointer;
 }
 
 /* TABELA */
@@ -108,21 +119,23 @@
   gap: 10px;
 }
 
-.btnAtualizar {
-  background: #4b4f5c;
-  color: white;
+.btnEditar {
+  padding: 6px 10px;
+  background: #4a4a4a;
+  color: #fff;
   border: none;
-  padding: 5px 12px;
   border-radius: 4px;
+  font-size: 12px;
   cursor: pointer;
 }
 
 .btnExcluir {
-  background: #b91c1c;
-  color: white;
+  padding: 6px 10px;
+  background: #c0392b;
+  color: #fff;
   border: none;
-  padding: 5px 12px;
   border-radius: 4px;
+  font-size: 12px;
   cursor: pointer;
 }
 
@@ -134,4 +147,8 @@
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
+}
+
+.tabelaLinhaVazia {
+  color: #777;
 }

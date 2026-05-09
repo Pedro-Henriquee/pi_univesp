@@ -4,10 +4,19 @@ import "./index.css";
 
 function Header({ title, previousScreen, nextScreen, usuario = null }) {
   const navigate = useNavigate();
+  const cargoUsuario = usuario?.cargo || usuario?.tipo;
+  const voltar = () => {
+    if (typeof previousScreen === "function") {
+      previousScreen();
+      return;
+    }
+
+    navigate(previousScreen || -1);
+  };
 
   return (
-    <div id="headerBar">
-      <button id="btnPrevious" onClick={() => navigate(previousScreen)}>
+    <div id="headerBar" className={!usuario ? "semUsuario" : ""}>
+      <button id="btnPrevious" onClick={voltar}>
         &#8592;
       </button>
 
@@ -23,12 +32,13 @@ function Header({ title, previousScreen, nextScreen, usuario = null }) {
         <div className="usuarioContainer">
           <div className="usuarioText">
             <span id="usuarioNome">{usuario.nome}</span>
+            {cargoUsuario && <span id="usuarioCargo">{cargoUsuario}</span>}
             <button
-  id="btnAction"
-  onClick={() => navigate(`/perfil/${usuario.id || 32}`)}
->
-  Ver perfil
-</button>
+              id="btnAction"
+              onClick={() => navigate(`/perfil/${usuario.id}`)}
+            >
+              Ver perfil
+            </button>
           </div>
 
           <div id="avatarUsuario">

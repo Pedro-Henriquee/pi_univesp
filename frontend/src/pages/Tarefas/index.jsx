@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import Layout from "../components/Layout";
-import api from "../services/api";
-import "./GestaoTarefas.css";
+import Layout from "../../components/Layout";
+import api from "../../services/api";
+import { formatarDataBR } from "../../utils/formatters";
+import "./index.css";
 
-function GestaoTarefas() {
+function Tarefas() {
   const [modoEdicao, setModoEdicao] = useState(false);
   const [idEdicao, setIdEdicao] = useState(null);
   const [busca, setBusca] = useState("");
@@ -24,12 +25,13 @@ function GestaoTarefas() {
       const resposta = await api.get("/tarefas/tarefas");
 
       const tarefasFormatadas = resposta.data.map((item) => ({
-        id: item.tarefa_id,
+        id: item.tarefa_id || item.id,
         titulo: item.titulo,
         descricao: item.descricao,
         responsavel: item.funcionario_nome || "Sem responsável",
         funcionario_id: item.funcionario_id,
-        prazo: item.prazo ? item.prazo.substring(0, 10) : "",
+        prazo: formatarDataBR(item.prazo),
+        prazoInput: item.prazo ? item.prazo.substring(0, 10) : "",
       }));
 
       setTarefas(tarefasFormatadas);
@@ -39,19 +41,32 @@ function GestaoTarefas() {
     }
   }
 
-  async function carregarFuncionarios() {
-    try {
-      const resposta = await api.get("/funcionarios");
-      setFuncionarios(resposta.data);
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao carregar funcionários.");
-    }
-  }
-
   useEffect(() => {
-    carregarTarefas();
-    carregarFuncionarios();
+    let ativo = true;
+
+    Promise.all([
+      api.get("/tarefas/tarefas"),
+      api.get("/funcionarios"),
+    ]).then(([respostaTarefas, respostaFuncionarios]) => {
+      if (!ativo) return;
+
+      const tarefasFormatadas = respostaTarefas.data.map((item) => ({
+        id: item.tarefa_id || item.id,
+        titulo: item.titulo,
+        descricao: item.descricao,
+        responsavel: item.funcionario_nome || "Sem responsável",
+        funcionario_id: item.funcionario_id,
+        prazo: formatarDataBR(item.prazo),
+        prazoInput: item.prazo ? item.prazo.substring(0, 10) : "",
+      }));
+
+      setTarefas(tarefasFormatadas);
+      setFuncionarios(respostaFuncionarios.data);
+    });
+
+    return () => {
+      ativo = false;
+    };
   }, []);
 
   function limparFormulario() {
@@ -118,7 +133,8 @@ function GestaoTarefas() {
   }
 
   return (
-    <Layout titulo="Gestão - Tarefas">
+
+    <Layout title="Gestão - Tarefas" ativo="Gestão de Tarefas">
       <div className="containerTarefas">
         <div className="buscarContainer">
           <label>Buscar Tarefa</label>
@@ -200,12 +216,15 @@ function GestaoTarefas() {
           </div>
 
           {tarefas
-            .filter(
-              (t) =>
-                t.titulo.toLowerCase().includes(busca.toLowerCase()) ||
-                t.descricao.toLowerCase().includes(busca.toLowerCase()) ||
-                t.responsavel.toLowerCase().includes(busca.toLowerCase())
-            )
+            .filter((t) => {
+              const termoBusca = busca.toLowerCase();
+
+              return (
+                t.titulo.toLowerCase().includes(termoBusca) ||
+                t.descricao.toLowerCase().includes(termoBusca) ||
+                t.responsavel.toLowerCase().includes(termoBusca)
+              );
+            })
             .map((tarefaAtual) => (
               <div className="tabelaLinha" key={tarefaAtual.id}>
                 <div>{tarefaAtual.titulo}</div>
@@ -215,7 +234,7 @@ function GestaoTarefas() {
 
                 <div className="acoes">
                   <button
-                    className="btnAtualizar"
+                    className="btnEditar"
                     onClick={() => {
                       setModoEdicao(true);
                       setIdEdicao(tarefaAtual.id);
@@ -223,11 +242,11 @@ function GestaoTarefas() {
                         titulo: tarefaAtual.titulo,
                         descricao: tarefaAtual.descricao,
                         responsavel: String(tarefaAtual.funcionario_id),
-                        prazo: tarefaAtual.prazo,
+                        prazo: tarefaAtual.prazoInput,
                       });
                     }}
                   >
-                    Atualizar
+                    Editar
                   </button>
 
                   <button
@@ -239,10 +258,20 @@ function GestaoTarefas() {
                 </div>
               </div>
             ))}
+
+          {tarefas.length === 0 && (
+            <div className="tabelaLinha tabelaLinhaVazia">
+              <div>Nenhuma tarefa cadastrada</div>
+              <div>-</div>
+              <div>-</div>
+              <div>-</div>
+              <div>-</div>
+            </div>
+          )}
         </div>
       </div>
     </Layout>
   );
 }
 
-export default GestaoTarefas;
+export default Tarefas;

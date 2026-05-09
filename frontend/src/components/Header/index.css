@@ -4,7 +4,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px 20px;
+  min-height: 82px;
+  padding: 16px 20px;
   position: relative;
 }
 
@@ -27,7 +28,7 @@
 
 #btnNext {
   position: absolute;
-  right: 16px;
+  right: 190px;
   background-color: transparent;
   border: none;
   outline: none;
@@ -38,23 +39,44 @@
   font-weight: 600;
 }
 
+#headerBar.semUsuario #btnNext {
+  right: 16px;
+}
+
 .usuarioContainer {
   position: absolute;
   right: 16px;
   display: flex;
   align-items: center;
   gap: 10px;
+  max-width: 310px;
 }
 
 .usuarioText {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  gap: 2px;
+  min-width: 0;
+  line-height: 1.1;
 }
 
 #usuarioNome {
   font-weight: 700;
   font-size: 15px;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#usuarioCargo {
+  color: #e2e2e2;
+  font-size: 12px;
+  max-width: 105px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #btnAction {
@@ -63,6 +85,10 @@
   border: none;
   color: #bbb;
   cursor: pointer;
+  font-size: 12px;
+  line-height: 1.1;
+  padding: 0;
+  white-space: nowrap;
 }
 
 #avatarUsuario {

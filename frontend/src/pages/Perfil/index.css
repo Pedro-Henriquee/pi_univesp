@@ -3,14 +3,11 @@
   background: #f4f5f7;
 }
 
-.perfilContainer {
-  display: flex;
+.perfilMain {
+  display: grid;
+  grid-template-columns: minmax(360px, 530px) 290px;
   gap: 110px;
-  padding: 55px 130px;
-}
-
-.perfilForm {
-  width: 530px;
+  padding: 55px 130px 80px;
 }
 
 .perfilForm h1 {
@@ -40,6 +37,7 @@
   border-radius: 4px;
   background: white;
   color: #50545f;
+  outline: none;
 }
 
 .perfilCard {
@@ -51,7 +49,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 55px;
+  padding: 55px 34px 24px;
+  user-select: none;
 }
 
 .perfilAvatar {
@@ -66,12 +65,15 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
+  display: block;
 }
 
 .perfilCard h2 {
   font-size: 18px;
   color: #5a5d68;
   margin-bottom: 35px;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .perfilAcoes {
@@ -97,4 +99,18 @@
   border-radius: 4px;
   background: #e5e5e5;
   cursor: pointer;
+  font-size: 18px;
+}
+
+@media (max-width: 900px) {
+  .perfilMain {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 36px 24px 56px;
+  }
+
+  .perfilCard {
+    width: 100%;
+    max-width: 290px;
+  }
 }

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
+const bcrypt = require("bcrypt");
 
 router.get("/", async (req, res) => {
   const { nome } = req.query;
@@ -41,7 +42,7 @@ router.post("/criar", async (req, res) => {
 });
 
 router.post("/criar/interno", async (req, res) => {
-  const { nome, cargo, username } = req.body;
+  const { nome, cargo, username, is_admin } = req.body;
 
   try {
     await pool.query(
@@ -60,18 +61,21 @@ router.post("/criar/interno", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { nome, cargo, username } = req.body;
+  const { nome, cargo, username, senha, is_admin } = req.body;
 
   try {
+    const senhaHash = senha ? await bcrypt.hash(senha, 10) : null;
+
     const result = await pool.query(
       `UPDATE funcionarios 
                 SET nome = COALESCE($1, nome),
                     cargo = COALESCE($2, cargo),
                     username = COALESCE($3, username),
-                    is_admin = COALESCE($4, is_admin)
-            WHERE id = $5
+                    is_admin = COALESCE($4, is_admin),
+                    senha = COALESCE($5, senha)
+            WHERE id = $6
           RETURNING *`,
-      [nome, cargo, username, is_admin, id],
+      [nome, cargo, username, is_admin, senhaHash, id],
     );
 
     if (result.rowCount === 0) {

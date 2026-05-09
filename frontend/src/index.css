@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "IBM Plex Sans", sans-serif;
+  caret-color: transparent;
 }
 
 html,
@@ -14,4 +15,33 @@ body {
 #root {
   width: 100%;
   min-height: 100vh;
+}
+
+img,
+button,
+h1,
+h2,
+h3,
+p,
+span,
+label,
+th,
+td,
+a,
+.perfilCard,
+.perfilBadge,
+.perfilBadgeAdmin {
+  user-select: none;
+}
+
+input,
+textarea {
+  caret-color: auto;
+  user-select: text;
+}
+
+input[readonly],
+textarea[readonly] {
+  caret-color: transparent;
+  cursor: default;
 }

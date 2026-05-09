@@ -1,266 +1,315 @@
-import { useEffect, useState, useRef } from "react";
-import Header from "../../components/Header";
-import Sidebar from "../../components/Sidebar";
+import { useEffect, useMemo, useState } from "react";
+import Layout from "../../components/Layout";
 import api from "../../services/api";
 import "./index.css";
 
+const diasSemana = [
+  { label: "Segunda-feira", value: 1 },
+  { label: "Terça-feira", value: 2 },
+  { label: "Quarta-feira", value: 3 },
+  { label: "Quinta-feira", value: 4 },
+  { label: "Sexta-feira", value: 5 },
+  { label: "Sábado", value: 6 },
+  { label: "Domingo", value: 7 },
+];
+
+function criarSemanaVazia(funcionarioId = "") {
+  return {
+    funcionarioId: String(funcionarioId),
+    dias: diasSemana.reduce((acc, dia) => {
+      acc[dia.value] = {
+        id: null,
+        hora_inicio: "",
+        hora_fim: "",
+        folga: false,
+      };
+      return acc;
+    }, {}),
+  };
+}
+
 function Escalas() {
-  const [escalas, setEscalas] = useState([]);
+  const [modoFormulario, setModoFormulario] = useState(false);
   const [funcionarios, setFuncionarios] = useState([]);
-  const [alteracoesSemana, setAlteracoesSemana] = useState({});
+  const [escalas, setEscalas] = useState([]);
+  const [formulario, setFormulario] = useState(criarSemanaVazia());
 
-  const inputFuncionario = useRef(null);
+  async function carregarDados() {
+    const [respostaFuncionarios, respostaEscalas] = await Promise.all([
+      api.get("/funcionarios"),
+      api.get("/escalas/escalas"),
+    ]);
 
-  const diasSemana = [
-    { label: "Segunda-feira", value: 1 },
-    { label: "Terça-feira", value: 2 },
-    { label: "Quarta-feira", value: 3 },
-    { label: "Quinta-feira", value: 4 },
-    { label: "Sexta-feira", value: 5 },
-    { label: "Sábado", value: 6 },
-    { label: "Domingo", value: 7 }
-  ];
-
-  async function carregarEscalas() {
-    const { data } = await api.get("/escalas/escalas");
-    setEscalas(data);
+    setFuncionarios(respostaFuncionarios.data);
+    setEscalas(respostaEscalas.data);
   }
 
-  async function carregarFuncionarios() {
-    const { data } = await api.get("/funcionarios");
-    setFuncionarios(data);
+  useEffect(() => {
+    let ativo = true;
+
+    Promise.all([
+      api.get("/funcionarios"),
+      api.get("/escalas/escalas"),
+    ]).then(([respostaFuncionarios, respostaEscalas]) => {
+      if (!ativo) return;
+      setFuncionarios(respostaFuncionarios.data);
+      setEscalas(respostaEscalas.data);
+    });
+
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
+  const escalasPorFuncionario = useMemo(() => {
+    return funcionarios
+      .map((funcionario) => ({
+        funcionario,
+        escalas: escalas
+          .filter((escala) => Number(escala.funcionario_id) === Number(funcionario.id))
+          .sort((a, b) => Number(a.dia_semana) - Number(b.dia_semana)),
+      }))
+      .filter((grupo) => grupo.escalas.length > 0);
+  }, [funcionarios, escalas]);
+
+  function abrirCadastro() {
+    setFormulario(criarSemanaVazia());
+    setModoFormulario(true);
   }
 
-  async function criarEscalaSemanal(funcionarioId) {
+  function abrirEdicao(funcionarioId) {
+    const semana = criarSemanaVazia(funcionarioId);
+
+    escalas
+      .filter((escala) => Number(escala.funcionario_id) === Number(funcionarioId))
+      .forEach((escala) => {
+        semana.dias[Number(escala.dia_semana)] = {
+          id: escala.id,
+          hora_inicio: escala.hora_inicio || "",
+          hora_fim: escala.hora_fim || "",
+          folga: !!escala.folga,
+        };
+      });
+
+    setFormulario(semana);
+    setModoFormulario(true);
+  }
+
+  function alterarFuncionario(funcionarioId) {
+    const funcionarioJaTemEscala = escalas.some(
+      (escala) => Number(escala.funcionario_id) === Number(funcionarioId)
+    );
+
+    if (funcionarioJaTemEscala) {
+      abrirEdicao(funcionarioId);
+      return;
+    }
+
+    setFormulario(criarSemanaVazia(funcionarioId));
+  }
+
+  function alterarDia(dia, campo, valor) {
+    setFormulario((atual) => ({
+      ...atual,
+      dias: {
+        ...atual.dias,
+        [dia]: {
+          ...atual.dias[dia],
+          [campo]: valor,
+        },
+      },
+    }));
+  }
+
+  async function salvarSemana() {
+    if (!formulario.funcionarioId) {
+      alert("Selecione um funcionário.");
+      return;
+    }
+
     try {
-      const promises = [];
-      for (let dia = 1; dia <= 7; dia++) {
-        promises.push(
-          api.post("/escalas/escalas/criar", {
-            funcionario_id: funcionarioId,
-            dia_semana: dia,
-            hora_inicio: null,
-            hora_fim: null,
-            folga: false
-          })
-        );
-      }
-      await Promise.all(promises);
-      alert("Escala semanal criada com sucesso!");
-      await carregarEscalas();
+      const requisicoes = diasSemana.map((dia) => {
+        const dadosDia = formulario.dias[dia.value];
+        const payload = {
+          funcionario_id: Number(formulario.funcionarioId),
+          dia_semana: dia.value,
+          hora_inicio: dadosDia.folga ? null : dadosDia.hora_inicio || null,
+          hora_fim: dadosDia.folga ? null : dadosDia.hora_fim || null,
+          folga: dadosDia.folga,
+        };
+
+        if (dadosDia.id) {
+          return api.put(`/escalas/escalas/${dadosDia.id}`, payload);
+        }
+
+        return api.post("/escalas/escalas/criar", payload);
+      });
+
+      await Promise.all(requisicoes);
+      await carregarDados();
+      setModoFormulario(false);
+      setFormulario(criarSemanaVazia());
+      alert("Escala salva com sucesso!");
     } catch (err) {
-      alert("Erro ao criar escala semanal: " + (err.response?.data?.error || err.message));
+      alert("Erro ao salvar escala: " + (err.response?.data?.error || err.message));
     }
   }
 
-  async function atualizarEscala(escalaAtualizada) {
-    try {
-      await api.put(`/escalas/escalas/${escalaAtualizada.id}`, escalaAtualizada);
-      carregarEscalas();
-    } catch (err) {
-      alert("Erro ao atualizar escala: " + (err.response?.data?.error || err.message));
-    }
-  }
-
-  async function excluirEscala(id) {
-    const confirmar = window.confirm("Tem certeza que deseja excluir esta escala?");
+  async function excluirSemana(funcionarioId) {
+    const confirmar = window.confirm("Tem certeza que deseja excluir a escala deste funcionário?");
     if (!confirmar) return;
 
     try {
-      await api.delete(`/escalas/escalas/${id}`);
-      carregarEscalas();
+      const escalasFuncionario = escalas.filter(
+        (escala) => Number(escala.funcionario_id) === Number(funcionarioId)
+      );
+      await Promise.all(
+        escalasFuncionario.map((escala) => api.delete(`/escalas/escalas/${escala.id}`))
+      );
+      await carregarDados();
+      alert("Escala excluída com sucesso!");
     } catch (err) {
       alert("Erro ao excluir escala: " + (err.response?.data?.error || err.message));
     }
   }
 
-  async function excluirSemana(funcionarioId) {
-    const confirmar = window.confirm("Tem certeza que deseja excluir TODAS as escalas deste funcionário?");
-    if (!confirmar) return;
+  function renderizarFormulario() {
+    return (
+      <Layout title="Cadastro de Escala" ativo="Gestão de Escalas">
+        <div className="escalaCadastroContainer">
+          <select
+            className="escalaSelect"
+            value={formulario.funcionarioId}
+            onChange={(event) => alterarFuncionario(event.target.value)}
+          >
+            <option value="">Funcionário</option>
+            {funcionarios.map((funcionario) => (
+              <option key={funcionario.id} value={funcionario.id}>
+                {funcionario.nome} ({funcionario.cargo})
+              </option>
+            ))}
+          </select>
 
-    try {
-      const escalasFuncionario = escalas.filter(e => e.funcionario_id === funcionarioId);
-      const promises = escalasFuncionario.map(e => api.delete(`/escalas/escalas/${e.id}`));
-      await Promise.all(promises);
-      alert("Todas as escalas da semana foram excluídas!");
-      carregarEscalas();
-    } catch (err) {
-      alert("Erro ao excluir escalas da semana: " + (err.response?.data?.error || err.message));
-    }
-  }
+          <div className="escalaFormulario">
+            {diasSemana.map((dia) => {
+              const dadosDia = formulario.dias[dia.value];
 
-  function registrarAlteracao(dia, campo, valor) {
-    setAlteracoesSemana(prev => ({
-      ...prev,
-      [dia]: {
-        ...prev[dia],
-        [campo]: valor
-      }
-    }));
-  }
+              return (
+                <div className="escalaDiaForm" key={dia.value}>
+                  <label>{dia.label}</label>
 
-  async function salvarSemana(funcionarioId) {
-    try {
-      const promises = diasSemana.map(dia => {
-        const escala = escalas.find(
-          e => e.funcionario_id === funcionarioId && e.dia_semana === dia.value
-        );
-        const alteracao = alteracoesSemana[dia.value];
-        if (escala && alteracao) {
-          return api.put(`/escalas/escalas/${escala.id}`, {
-            ...escala,
-            ...alteracao
-          });
-        }
-        return null;
-      }).filter(Boolean);
+                  <input
+                    type="time"
+                    value={dadosDia.hora_inicio}
+                    disabled={dadosDia.folga}
+                    onChange={(event) =>
+                      alterarDia(dia.value, "hora_inicio", event.target.value)
+                    }
+                  />
 
-      await Promise.all(promises);
-      alert("Semana salva com sucesso!");
-      carregarEscalas();
-      setAlteracoesSemana({});
-    } catch (err) {
-      alert("Erro ao salvar semana: " + (err.response?.data?.error || err.message));
-    }
-  }
+                  <input
+                    type="time"
+                    value={dadosDia.hora_fim}
+                    disabled={dadosDia.folga}
+                    onChange={(event) =>
+                      alterarDia(dia.value, "hora_fim", event.target.value)
+                    }
+                  />
 
-  useEffect(() => {
-    carregarFuncionarios();
-    carregarEscalas();
-  }, []);
-
-  const funcionarioSelecionado = parseInt(inputFuncionario.current?.value, 10);
-
-  return (
-    <div className="escalasPage">
-      <Header 
-        title="Gestão - Escalas"
-        previousScreen={() => navigate(-1)}
-      />
-      
-      <div className="escalasContent">
-        <Sidebar ativo="Gestão de Escalas" />
-
-        <div className="escalasContainer">
-          <h1 className="titleSection">Gestão de Escalas</h1>
-
-          <div className="inputsContainer">
-            <select 
-              ref={inputFuncionario} 
-              className="inputForm"
-              onChange={carregarEscalas}
-            >
-              <option value="">Selecione um funcionário</option>
-              {funcionarios.map(f => (
-                <option key={f.id} value={f.id}>
-                  {f.nome} ({f.cargo})
-                </option>
-              ))}
-            </select>
-
-            {funcionarioSelecionado &&
-              !escalas.some(e => e.funcionario_id === funcionarioSelecionado) && (
-                <button 
-                  className="btnAdicionar" 
-                  onClick={() => criarEscalaSemanal(funcionarioSelecionado)}
-                >
-                  Criar Escala Semanal
-                </button>
-            )}
-
-            {funcionarioSelecionado && (
-              <>
-                <button 
-                  className="btnSalvarSemana"
-                  onClick={() => salvarSemana(funcionarioSelecionado)}
-                >
-                  Salvar todos os horários
-                </button>
-                <button 
-                  className="btnExcluirSemana"
-                  onClick={() => excluirSemana(funcionarioSelecionado)}
-                >
-                  Excluir todas as escalas da semana
-                </button>
-              </>
-            )}
+                  <label className="folgaCheck">
+                    <input
+                      type="checkbox"
+                      checked={dadosDia.folga}
+                      onChange={(event) =>
+                        alterarDia(dia.value, "folga", event.target.checked)
+                      }
+                    />
+                    Folga
+                  </label>
+                </div>
+              );
+            })}
           </div>
 
-          <table className="tabela">
-            <thead className="tabelaHeader">
-              <tr>
-                <th className="th">ID</th>
-                <th className="th">Funcionário</th>
-                <th className="th">Dia</th>
-                <th className="th">Início</th>
-                <th className="th">Fim</th>
-                <th className="th">Folga</th>
-                <th className="th">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {funcionarioSelecionado &&
-                diasSemana.map(dia => {
-                  const escala = escalas.find(
-                    e => e.funcionario_id === funcionarioSelecionado && e.dia_semana === dia.value
-                  );
-
-                  return (
-                    <tr 
-                      key={dia.value} 
-                      className={`tabelaLinha ${escala?.folga ? "linhaFolga" : ""}`}
-                    >
-                      <td className="td">{escala?.id || "-"}</td>
-                      <td className="td">
-                        {funcionarios.find(f => f.id === funcionarioSelecionado)?.nome || "N/A"}
-                      </td>
-                      <td className="td">{dia.label}</td>
-                      <td className="td">
-                        <input
-                          type="time"
-                          defaultValue={escala?.hora_inicio || ""}
-                          onChange={(ev) => registrarAlteracao(dia.value, "hora_inicio", ev.target.value || null)}
-                          disabled={escala?.folga}
-                        />
-                      </td>
-                      <td className="td">
-                        <input
-                          type="time"
-                          defaultValue={escala?.hora_fim || ""}
-                          onChange={(ev) => registrarAlteracao(dia.value, "hora_fim", ev.target.value || null)}
-                          disabled={escala?.folga}
-                        />
-                      </td>
-                      <td className="td">
-                        {escala ? (
-                          <>
-                            <span className="folgaIcon">{escala.folga ? "❌" : "✅"}</span>
-                            <input
-                              type="checkbox"
-                              defaultChecked={escala.folga}
-                              onChange={(ev) => registrarAlteracao(dia.value, "folga", ev.target.checked)}
-                            />
-                          </>
-                        ) : "-"}
-                      </td>
-                      <td className="td">
-                        {escala ? (
-                          <button 
-                            className="btnExcluir"
-                            onClick={() => excluirEscala(escala.id)}
-                          >
-                            Excluir
-                          </button>
-                        ) : "-"}
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
+          <div className="escalaFormularioAcoes">
+            <button className="btnAdicionar" onClick={salvarSemana}>
+              Salvar escala
+            </button>
+            <button className="btnCancelar" onClick={() => setModoFormulario(false)}>
+              Cancelar
+            </button>
+          </div>
         </div>
+      </Layout>
+    );
+  }
+
+  if (modoFormulario) {
+    return renderizarFormulario();
+  }
+
+  return (
+    <Layout title="Gestão - Escalas" ativo="Gestão de Escalas">
+      <div className="escalasContainer">
+        <div className="escalaTituloLinha">
+          <h1>Escalas Mensais</h1>
+          <button className="btnAdicionar" onClick={abrirCadastro}>
+            Adicionar nova escala
+          </button>
+        </div>
+
+        {escalasPorFuncionario.length === 0 ? (
+          <div className="escalaVazia">Nenhuma escala cadastrada.</div>
+        ) : (
+          escalasPorFuncionario.map(({ funcionario, escalas: escalasFuncionario }) => (
+            <section className="escalaCard" key={funcionario.id}>
+              <div className="escalaCardTopo">
+                <h2>
+                  Funcionário(a): {funcionario.nome} ({funcionario.cargo})
+                </h2>
+
+                <div className="escalaCardAcoes">
+                  <button className="btnEditar" onClick={() => abrirEdicao(funcionario.id)}>
+                    Editar
+                  </button>
+                  <button className="btnExcluir" onClick={() => excluirSemana(funcionario.id)}>
+                    Excluir
+                  </button>
+                </div>
+              </div>
+
+              <table className="escalaTabela">
+                <thead>
+                  <tr>
+                    <th>Dia da semana</th>
+                    <th>Início</th>
+                    <th>Fim</th>
+                    <th>Folga</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {diasSemana.map((dia) => {
+                    const escala = escalasFuncionario.find(
+                      (item) => Number(item.dia_semana) === dia.value
+                    );
+                    const folga = !!escala?.folga;
+
+                    return (
+                      <tr key={dia.value}>
+                        <td>{dia.label}</td>
+                        <td>{folga ? "-" : escala?.hora_inicio || "-"}</td>
+                        <td>{folga ? "-" : escala?.hora_fim || "-"}</td>
+                        <td>{folga ? "Sim" : "Não"}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </section>
+          ))
+        )}
       </div>
-    </div>
+    </Layout>
   );
 }
 

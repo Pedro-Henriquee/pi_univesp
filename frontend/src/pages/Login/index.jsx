@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import userAvatar from "../../assets/avatar.png";
 import api from "../../services/api";
+import { setUsuarioLogado } from "../../utils/session";
 import "./index.css";
 
 function Login() {
@@ -26,10 +27,20 @@ function Login() {
         senha: inputSenha.current.value,
       });
 
+      const { data: funcionarios } = await api.get("/funcionarios");
+
+      const usuarioLogado = funcionarios.find(
+        (funcionario) => funcionario.username === inputUsuario.current.value
+      );
+
+      if (usuarioLogado) {
+        setUsuarioLogado(usuarioLogado);
+      }
+
       inputUsuario.current.value = "";
       inputSenha.current.value = "";
 
-      navigate("/funcionarios");
+      navigate("/visao-geral");
     } catch (error) {
       alert("Erro ao fazer login: " + error.message);
     }
@@ -73,7 +84,7 @@ function Login() {
             <button id="btnEntrar" onClick={validateFields}>
               ENTRAR
             </button>
-            <button id="btnCadastrar" onClick={() => navigate("/")}>
+            <button id="btnCadastrar" onClick={() => navigate("/signup")}>
               CADASTRAR
             </button>
           </div>

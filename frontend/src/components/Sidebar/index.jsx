@@ -1,13 +1,17 @@
 import "./index.css";
 import { NavLink } from "react-router-dom";
+import { isAdmin } from "../../utils/session";
 
-function Sidebar({ ativo }) {
-  const itensMenu = [
+function Sidebar({ ativo, usuario }) {
+  const itensMenuAdmin = [
     { nome: "Visão geral", href: "/visao-geral" },
     { nome: "Gestão de Funcionários", href: "/funcionarios" },
     { nome: "Gestão de Escalas", href: "/escalas" },
     { nome: "Gestão de Tarefas", href: "/tarefas" },
   ];
+  const itensMenu = isAdmin(usuario)
+    ? itensMenuAdmin
+    : itensMenuAdmin.filter((item) => item.href === "/visao-geral");
 
   return (
     <div className="sidebarContainer">
@@ -15,13 +19,13 @@ function Sidebar({ ativo }) {
         const estaAtivo = item.nome === ativo;
 
         return (
-          <a
+          <NavLink
             className={`itemSidebar ${estaAtivo ? "itemAtivo" : ""}`}
             key={item.nome}
-            href={item.href}
+            to={item.href}
           >
             {item.nome}
-          </a>
+          </NavLink>
         );
       })}
     </div>
