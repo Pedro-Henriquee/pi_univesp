@@ -34,9 +34,10 @@ router.post("/escalas/criar", async (req, res) => {
   const { funcionario_id, dia_semana, hora_inicio, hora_fim, folga } = req.body;
 
   try {
-    await pool.query(
+    const result = await pool.query(
       `INSERT INTO escalas (funcionario_id, dia_semana, hora_inicio, hora_fim, folga) 
-            VALUES ($1, $2, $3, $4, $5)`,
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING *`,
       [
         funcionario_id,
         dia_semana,
@@ -64,8 +65,9 @@ router.put("/escalas/:id", async (req, res) => {
                 hora_inicio = $3,
                 hora_fim = $4,
                 folga = $5
-            WHERE id = $6`,
-      [funcionario_id, dia_semana, hora_inicio, hora_fim, folga, id],
+            WHERE id = $6
+            RETURNING *`,
+      [funcionario_id, dia_semana, hora_inicio, hora_fim, folga, id]
     );
 
     if (result.rowCount === 0) {
@@ -82,7 +84,7 @@ router.delete("/escalas/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const result = await pool.query("DELETE FROM escalas WHERE id = $1", [id]);
+    const result = await pool.query("DELETE FROM escalas WHERE id = $1 RETURNING *", [id]);
 
     if (result.rowCount === 0) {
       return res.status(404).json({ message: "Escala não encontrada" });

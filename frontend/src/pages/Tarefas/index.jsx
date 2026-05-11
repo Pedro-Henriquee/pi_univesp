@@ -136,13 +136,17 @@ function Tarefas() {
 
     <Layout title="Gestão - Tarefas" ativo="Gestão de Tarefas">
       <div className="containerTarefas">
-        <div className="buscarContainer">
-          <label>Buscar Tarefa</label>
-          <input
-            type="text"
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
-          />
+        <div className="buscaTarefasContainer">
+          <label className="buscaTarefasLabel">Buscar tarefa</label>
+          <div className="buscaTarefasInputContainer">
+            <span className="buscaTarefasIcone">🔍</span>
+            <input
+              placeholder="Nome da tarefa"
+              className="buscaTarefasInput"
+              type="text"
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)} />
+          </div>
         </div>
 
         <div className="tituloSecao">
@@ -206,69 +210,69 @@ function Tarefas() {
           )}
         </div>
 
-        <div className="tabelaContainer">
-          <div className="tabelaHeader">
-            <div>Título</div>
-            <div>Descrição</div>
-            <div>Responsável</div>
-            <div>Prazo</div>
-            <div>Ações</div>
-          </div>
+        <table className="tabela">
+          <thead>
+            <tr className="tabelaHeader">
+              <th className="th">Título</th>
+              <th className="th">Descrição</th>
+              <th className="th">Responsável</th>
+              <th className="th">Prazo</th>
+              <th className="th">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tarefas
+              .filter((t) => {
+                const termoBusca = busca.toLowerCase();
+                return (
+                  t.titulo.toLowerCase().includes(termoBusca) ||
+                  t.descricao.toLowerCase().includes(termoBusca) ||
+                  t.responsavel.toLowerCase().includes(termoBusca)
+                );
+              })
+              .map((tarefaAtual) => (
+                <tr key={tarefaAtual.id} className="tabelaLinha">
+                  <td className="td">{tarefaAtual.titulo}</td>
+                  <td className="td">{tarefaAtual.descricao}</td>
+                  <td className="td">{tarefaAtual.responsavel}</td>
+                  <td className="td">{tarefaAtual.prazo}</td>
+                  <td className="td">
+                    <div className="acoes">
+                      <button
+                        className="btnEditar"
+                        onClick={() => {
+                          setModoEdicao(true);
+                          setIdEdicao(tarefaAtual.id);
+                          setTarefa({
+                            titulo: tarefaAtual.titulo,
+                            descricao: tarefaAtual.descricao,
+                            responsavel: String(tarefaAtual.funcionario_id),
+                            prazo: tarefaAtual.prazoInput,
+                          });
+                        }}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="btnExcluir"
+                        onClick={() => excluirTarefa(tarefaAtual.id)}
+                      >
+                        Excluir
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
 
-          {tarefas
-            .filter((t) => {
-              const termoBusca = busca.toLowerCase();
-
-              return (
-                t.titulo.toLowerCase().includes(termoBusca) ||
-                t.descricao.toLowerCase().includes(termoBusca) ||
-                t.responsavel.toLowerCase().includes(termoBusca)
-              );
-            })
-            .map((tarefaAtual) => (
-              <div className="tabelaLinha" key={tarefaAtual.id}>
-                <div>{tarefaAtual.titulo}</div>
-                <div>{tarefaAtual.descricao}</div>
-                <div>{tarefaAtual.responsavel}</div>
-                <div>{tarefaAtual.prazo}</div>
-
-                <div className="acoes">
-                  <button
-                    className="btnEditar"
-                    onClick={() => {
-                      setModoEdicao(true);
-                      setIdEdicao(tarefaAtual.id);
-                      setTarefa({
-                        titulo: tarefaAtual.titulo,
-                        descricao: tarefaAtual.descricao,
-                        responsavel: String(tarefaAtual.funcionario_id),
-                        prazo: tarefaAtual.prazoInput,
-                      });
-                    }}
-                  >
-                    Editar
-                  </button>
-
-                  <button
-                    className="btnExcluir"
-                    onClick={() => excluirTarefa(tarefaAtual.id)}
-                  >
-                    Excluir
-                  </button>
-                </div>
-              </div>
-            ))}
-
-          {tarefas.length === 0 && (
-            <div className="tabelaLinha tabelaLinhaVazia">
-              <div>Nenhuma tarefa cadastrada</div>
-              <div>-</div>
-              <div>-</div>
-              <div>-</div>
-              <div>-</div>
-            </div>
-          )}
-        </div>
+            {tarefas.length === 0 && (
+              <tr className="tabelaLinha">
+                <td className="td" colSpan={5} style={{ color: "#777" }}>
+                  Nenhuma tarefa cadastrada
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </Layout>
   );

@@ -79,7 +79,6 @@ function Funcionarios() {
     carregarFuncionarios();
   }
 
-
   function editarFuncionario(funcionario) {
     setEditandoId(funcionario.id);
     inputNome.current.value = funcionario.nome;

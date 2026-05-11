@@ -42,7 +42,7 @@ function Login() {
 
       navigate("/visao-geral");
     } catch (error) {
-      alert("Erro ao fazer login: " + error.message);
+      alert("Usuário não encontrado!");
     }
   }
 

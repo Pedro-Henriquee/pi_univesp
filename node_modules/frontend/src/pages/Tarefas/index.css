@@ -13,27 +13,37 @@
 .containerTarefas {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
   max-width: 1100px;
 }
 
-/* BUSCA */
-.buscarContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.buscarContainer label {
+.buscaTarefasLabel {
+  display: block;
   font-size: 13px;
   color: #555;
+  margin-bottom: 6px;
 }
 
-.buscarContainer input {
-  width: 250px;
-  padding: 8px 10px;
+.buscaTarefasInputContainer {
+  display: flex;
+  align-items: center;
+  background: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
+  padding: 6px 10px;
+  width: 220px;
+}
+
+.buscaTarefasIcone {
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.buscaTarefasInput {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  width: 100%;
 }
 
 .tituloSecao {
@@ -84,33 +94,40 @@
 }
 
 /* TABELA */
-.tabelaContainer {
-  margin-top: 30px;
-  background: white;
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
   border-radius: 6px;
   overflow: hidden;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
 }
 
 .tabelaHeader {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1.5fr 1fr 1fr;
   background: #dcdce0;
+}
+
+.th {
   padding: 12px 16px;
-  font-weight: 600;
+  text-align: left;
   font-size: 14px;
+  font-weight: 600;
+  color: #444;
 }
 
 .tabelaLinha {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1.5fr 1fr 1fr;
-  padding: 12px 16px;
   border-top: 1px solid #eee;
-  font-size: 14px;
 }
 
 .tabelaLinha:nth-child(even) {
   background: #fafafa;
+}
+
+.td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #333;
 }
 
 /* BOTÕES */

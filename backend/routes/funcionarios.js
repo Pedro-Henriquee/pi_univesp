@@ -28,9 +28,10 @@ router.post("/criar", async (req, res) => {
   const { nome, cargo, username, senha, is_admin } = req.body;
 
   try {
-    await pool.query(
+    const result = await pool.query(
       `INSERT INTO funcionarios (nome, cargo, username, senha, is_admin) 
-            VALUES ($1, $2, $3, $4, $5)`,
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING *`,
       [nome, cargo, username || null, senha || null, is_admin || false],
     );
 
@@ -45,9 +46,10 @@ router.post("/criar/interno", async (req, res) => {
   const { nome, cargo, username, is_admin } = req.body;
 
   try {
-    await pool.query(
+    const result = await pool.query(
       `INSERT INTO funcionarios (nome, cargo, username) 
-            VALUES ($1, $2, $3)`,
+            VALUES ($1, $2, $3),
+            RETURNING *`,
       [nome, cargo, username || null],
     );
 
@@ -116,7 +118,7 @@ router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const result = await pool.query("DELETE FROM funcionarios WHERE id = $1", [
+    const result = await pool.query("DELETE FROM funcionarios WHERE id = $1 RETURNING *", [
       id,
     ]);
 

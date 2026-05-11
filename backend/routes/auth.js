@@ -13,13 +13,14 @@ router.post("/cadastro", async (req, res) => {
       senhaHash = await bcrypt.hash(senha, 10);
     }
 
-    await pool.query(
+    const result  = await pool.query(
       `INSERT INTO funcionarios (nome, cargo, username, senha)
-       VALUES ($1, $2, $3, $4)`,
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
       [nome, cargo, username || null, senhaHash],
     );
 
-    res.status(201).json({ message: "Registro criado com sucesso!" });
+    res.status(201).json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -46,7 +47,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Senha inválida" });
     }
 
-    res.status(200).json({ message: "Login bem-sucedido}}" });
+    res.status(200).json({ message: "Login bem-sucedido!" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
