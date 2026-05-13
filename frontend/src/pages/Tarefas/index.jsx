@@ -123,6 +123,8 @@ function Tarefas() {
 
   async function excluirTarefa(id) {
     try {
+      const confirmarExcluirTarefa = window.confirm("Tem certeza que deseja excluir a tarefa?");
+      if (!confirmarExcluirTarefa) return;
       await api.delete(`/tarefas/tarefas/${id}`);
       alert("Tarefa excluída com sucesso!");
       carregarTarefas();
@@ -181,7 +183,7 @@ function Tarefas() {
               setTarefa({ ...tarefa, responsavel: e.target.value })
             }
           >
-            <option value="">Selecione um responsável</option>
+            <option value="">Selecione um responsável *</option>
 
             {funcionarios.map((funcionario) => (
               <option key={funcionario.id} value={funcionario.id}>

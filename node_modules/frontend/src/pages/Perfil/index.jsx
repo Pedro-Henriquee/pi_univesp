@@ -70,6 +70,7 @@ function VerPerfil() {
       }
 
       alert("Perfil atualizado com sucesso!");
+      navigate("/");
     } catch (error) {
       alert("Erro ao salvar perfil: " + (error.response?.data?.error || error.message));
     }
