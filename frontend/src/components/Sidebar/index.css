@@ -1,4 +1,4 @@
-/* ── DESKTOP */
+/* ── DESKTOP ── */
 .sidebarContainer {
   width: 200px;
   min-width: 200px;
@@ -30,13 +30,10 @@
 
 .itemNome {
   flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* ── MOBILE */
-@media (max-width: 480px) {
+/* ── MOBILE── */
+@media (max-width: 484px) {
   .sidebarContainer {
     position: fixed;
     bottom: 0;
