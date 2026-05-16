@@ -31,11 +31,6 @@ function Signup() {
       alert("As senhas não coincidem!");
       return;
     }
-
-    createUser().then(function () {
-      alert("Usuário criado com sucesso!");
-      navigate("/login");
-    });
   }
 
   async function createUser() {
@@ -54,6 +49,10 @@ function Signup() {
       inputUser.current.value = "";
       inputSenha.current.value = "";
       inputConfirmarSenha.current.value = "";
+
+      alert("Usuário criado com sucesso!");
+      navigate("/login");
+
     } catch (error) {
       alert("Erro ao criar usuário: " + error.message);
     } finally {
