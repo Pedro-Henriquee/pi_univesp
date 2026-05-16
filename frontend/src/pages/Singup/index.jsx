@@ -31,11 +31,11 @@ function Signup() {
       alert("As senhas não coincidem!");
       return;
     }
-  }
 
-  createUser().then(() => {
-    navigate("/login");
-  });
+    createUser().then(function () {
+      navigate("/login");
+    });
+  }
 
   async function createUser() {
     try {
