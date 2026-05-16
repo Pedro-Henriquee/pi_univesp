@@ -9,6 +9,7 @@ function Sidebar({ ativo, usuario }) {
     { nome: "Gestão de Escalas", href: "/escalas" },
     { nome: "Gestão de Tarefas", href: "/tarefas" },
   ];
+
   const itensMenu = isAdmin(usuario)
     ? itensMenuAdmin
     : itensMenuAdmin.filter((item) => item.href === "/visao-geral");
@@ -24,7 +25,7 @@ function Sidebar({ ativo, usuario }) {
             key={item.nome}
             to={item.href}
           >
-            {item.nome}
+            <span className="itemNome">{item.nome}</span>
           </NavLink>
         );
       })}

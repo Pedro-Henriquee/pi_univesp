@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Header from "../../components/Header";
 import userAvatar from "../../assets/avatar.png";
 import api from "../../services/api";
@@ -10,6 +10,8 @@ function Signup() {
   const inputUser = useRef(null);
   const inputSenha = useRef(null);
   const inputConfirmarSenha = useRef(null);
+
+  const [carregando, setCarregando] = useState(false);
 
   function validateFields() {
     if (
@@ -33,6 +35,8 @@ function Signup() {
 
   async function createUser() {
     try {
+      setCarregando(true);
+
       await api.post("/auth/cadastro", {
         nome: inputNome.current.value,
         cargo: inputCargo.current.value,
@@ -47,11 +51,22 @@ function Signup() {
       inputConfirmarSenha.current.value = "";
     } catch (error) {
       alert("Erro ao criar usuário: " + error.message);
+    } finally {
+      setCarregando(false);
     }
   }
 
   return (
     <div className="pageHome">
+      {carregando && (
+        <div className="loadingOverlay">
+          <div className="loadingBox">
+            <div className="loadingSpinner" />
+            <span>Aguarde...</span>
+          </div>
+        </div>
+      )}
+
       <Header
         title="Cadastro"
         previousScreen={window.history.back}
@@ -77,6 +92,7 @@ function Signup() {
             name="nome"
             placeholder="Nome"
             ref={inputNome}
+            disabled={carregando}
           />
 
           <div className="inputsLine">
@@ -86,6 +102,7 @@ function Signup() {
               name="cargo"
               placeholder="Cargo"
               ref={inputCargo}
+              disabled={carregando}
             />
             <input
               className="halfInput"
@@ -93,6 +110,7 @@ function Signup() {
               name="username"
               placeholder="Usuário (ex.: user123)"
               ref={inputUser}
+              disabled={carregando}
             />
           </div>
 
@@ -103,6 +121,7 @@ function Signup() {
               name="senha"
               placeholder="Senha"
               ref={inputSenha}
+              disabled={carregando}
             />
             <input
               className="halfInput"
@@ -110,11 +129,16 @@ function Signup() {
               name="confirmarSenha"
               placeholder="Confirmar senha"
               ref={inputConfirmarSenha}
+              disabled={carregando}
             />
           </div>
 
-          <button className="containerButton" onClick={validateFields}>
-            CADASTRAR
+          <button
+            className="containerButton"
+            onClick={validateFields}
+            disabled={carregando}
+          >
+            {carregando ? "AGUARDE..." : "CADASTRAR"}
           </button>
         </div>
       </div>

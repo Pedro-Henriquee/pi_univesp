@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import userAvatar from "../../assets/avatar.png";
@@ -11,6 +11,8 @@ function Login() {
   const inputUsuario = useRef(null);
   const inputSenha = useRef(null);
 
+  const [carregando, setCarregando] = useState(false);
+
   function validateFields() {
     if (!inputUsuario.current.value || !inputSenha.current.value) {
       alert("Preencha todos os campos!");
@@ -22,6 +24,8 @@ function Login() {
 
   async function getUsuario() {
     try {
+      setCarregando(true);
+
       await api.post("/auth/login", {
         username: inputUsuario.current.value,
         senha: inputSenha.current.value,
@@ -43,11 +47,22 @@ function Login() {
       navigate("/visao-geral");
     } catch (error) {
       alert("Usuário não encontrado!");
+    } finally {
+      setCarregando(false);
     }
   }
 
   return (
     <div className="pageLogin">
+      {carregando && (
+        <div className="loadingOverlay">
+          <div className="loadingBox">
+            <div className="loadingSpinner" />
+            <span>Aguarde...</span>
+          </div>
+        </div>
+      )}
+
       <Header title="Login" previousScreen={"/"} />
 
       <div className="content">
@@ -70,6 +85,7 @@ function Login() {
             name="username"
             placeholder="Usuário"
             ref={inputUsuario}
+            disabled={carregando}
           />
 
           <input
@@ -78,13 +94,22 @@ function Login() {
             name="senha"
             placeholder="Senha"
             ref={inputSenha}
+            disabled={carregando}
           />
 
           <div className="botoes">
-            <button id="btnEntrar" onClick={validateFields}>
-              ENTRAR
+            <button
+              id="btnEntrar"
+              onClick={validateFields}
+              disabled={carregando}
+            >
+              {carregando ? "AGUARDE..." : "ENTRAR"}
             </button>
-            <button id="btnCadastrar" onClick={() => navigate("/signup")}>
+            <button
+              id="btnCadastrar"
+              onClick={() => navigate("/signup")}
+              disabled={carregando}
+            >
               CADASTRAR
             </button>
           </div>

@@ -5,28 +5,26 @@ import "./index.css";
 function Header({ title, previousScreen, nextScreen, usuario = null }) {
   const navigate = useNavigate();
   const cargoUsuario = usuario?.cargo || usuario?.tipo;
-  const voltar = () => {
-    if (typeof previousScreen === "function") {
-      previousScreen();
-      return;
-    }
 
+  const voltar = () => {
     navigate(previousScreen || -1);
   };
 
   return (
     <div id="headerBar" className={!usuario ? "semUsuario" : ""}>
-      <button id="btnPrevious" onClick={voltar}>
-        &#8592;
-      </button>
-
-      <span id="headerTitle">{title}</span>
-
-      {nextScreen && (
-        <button id="btnNext" onClick={() => navigate(nextScreen.rota)}>
-          {nextScreen.texto} &#8594;
+      <div className="linha1">
+        <button id="btnPrevious" onClick={voltar}>
+          &#8592;
         </button>
-      )}
+
+        <span id="headerTitle">{title}</span>
+
+        {nextScreen && (
+          <button id="btnNext" onClick={() => navigate(nextScreen.rota)}>
+            {nextScreen.texto} &#8594;
+          </button>
+        )}
+      </div>
 
       {usuario && (
         <div className="usuarioContainer">
@@ -46,9 +44,8 @@ function Header({ title, previousScreen, nextScreen, usuario = null }) {
           </div>
         </div>
       )}
-    </div >
+    </div>
   );
 }
 
 export default Header;
-
