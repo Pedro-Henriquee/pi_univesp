@@ -1,10 +1,12 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import userAvatar from "../../assets/avatar.png";
 import api from "../../services/api";
 import "./index.css";
 
 function Signup() {
+  const navigate = useNavigate();
   const inputNome = useRef(null);
   const inputCargo = useRef(null);
   const inputUser = useRef(null);
@@ -30,7 +32,10 @@ function Signup() {
       return;
     }
 
-    createUser().then(() => alert("Usuário criado com sucesso!"));
+    createUser().then(function () {
+      alert("Usuário criado com sucesso!");
+      navigate("/login");
+    });
   }
 
   async function createUser() {
