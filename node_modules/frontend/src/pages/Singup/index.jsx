@@ -33,6 +33,10 @@ function Signup() {
     }
   }
 
+  createUser().then(() => {
+    navigate("/login");
+  });
+
   async function createUser() {
     try {
       setCarregando(true);
@@ -51,8 +55,6 @@ function Signup() {
       inputConfirmarSenha.current.value = "";
 
       alert("Usuário criado com sucesso!");
-      navigate("/login");
-
     } catch (error) {
       alert("Erro ao criar usuário: " + error.message);
     } finally {
