@@ -7,9 +7,13 @@ function Header({ title, previousScreen, nextScreen, usuario = null }) {
   const cargoUsuario = usuario?.cargo || usuario?.tipo;
 
   const voltar = () => {
+    if (typeof previousScreen === "function") {
+      previousScreen();
+      return;
+    }
     navigate(previousScreen || -1);
   };
-
+  
   return (
     <div id="headerBar" className={!usuario ? "semUsuario" : ""}>
       <div className="linha1">

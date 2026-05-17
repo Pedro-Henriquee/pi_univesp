@@ -1,0 +1,31 @@
+.layoutContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layoutBody {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 82px);
+}
+
+.layoutMain {
+  flex: 1;
+  padding: 45px;
+  background: #f4f5f7;
+  overflow-x: auto;
+  min-width: 0;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 484px) {
+  .layoutBody {
+    min-height: calc(100vh - 56px);
+  }
+
+  .layoutMain {
+    padding: 20px 16px;
+    padding-bottom: 80px;
+  }
+}

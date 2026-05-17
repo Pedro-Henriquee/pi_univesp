@@ -9,6 +9,13 @@
   position: relative;
 }
 
+.linha1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 #headerTitle {
   font-size: 17px;
   font-weight: 600;
@@ -115,64 +122,54 @@
   object-fit: cover;
 }
 
-/* ── MOBILE ─────────────────────────────────────────────── */
-@media (max-width: 480px) {
+/* ── MOBILE ─ */
+@media (max-width: 484px) {
   #headerBar {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    min-height: unset;
-    padding: 12px 16px;
-    gap: 8px;
-  }
-
-  /* Linha 1: seta + título */
-  #headerBar .linha1 {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 12px;
-  }
-
-  #btnPrevious {
-    position: static;
-    font-size: 20px;
-    flex-shrink: 0;
+    min-height: 56px;
+    padding: 10px 16px;
+    flex-wrap: nowrap;
   }
 
   #headerTitle {
-    font-size: 15px;
-    max-width: unset;
-    flex: 1;
-    text-align: left;
-  }
-
-  #btnNext {
-    position: static;
-    font-size: 13px;
-    flex-shrink: 0;
+    font-size: 14px;
+    max-width: calc(100% - 100px);
   }
 
   .usuarioContainer {
-    position: static;
-    max-width: 100%;
-    width: 100%;
-    justify-content: flex-end;
-    padding-left: 32px;
+    max-width: 130px;
+    gap: 6px;
+  }
+
+  .usuarioText {
+    display: flex;
   }
 
   #usuarioNome {
-    font-size: 13px;
-    max-width: 160px;
+    font-size: 11px;
+    max-width: 80px;
   }
 
   #usuarioCargo {
-    font-size: 11px;
-    max-width: 160px;
+    font-size: 10px;
+    max-width: 80px;
+  }
+
+  #btnAction {
+    font-size: 10px;
   }
 
   #avatarUsuario {
     width: 34px;
     height: 34px;
     min-width: 34px;
+  }
+
+  #btnNext {
+    right: 56px;
+    font-size: 12px;
+  }
+
+  #headerBar.semUsuario #btnNext {
+    right: 16px;
   }
 }

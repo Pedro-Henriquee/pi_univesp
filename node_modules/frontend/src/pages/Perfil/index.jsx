@@ -94,7 +94,7 @@ function VerPerfil() {
   if (!usuario) {
     return (
       <div className="perfilPage">
-        <Header title="Ver perfil" previousScreen={() => navigate(-1)} />
+        <Header title="Ver perfil" previousScreen="/visao-geral" />
         <main className="perfilMain">
           <h1>Perfil não encontrado</h1>
         </main>
@@ -104,7 +104,7 @@ function VerPerfil() {
 
   return (
     <div className="perfilPage">
-      <Header title="Ver perfil" previousScreen={() => navigate(-1)} />
+      <Header title="Ver perfil" previousScreen="/visao-geral" />
 
       <main className="perfilMain">
         <section className="perfilForm">
