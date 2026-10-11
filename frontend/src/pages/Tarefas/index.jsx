@@ -16,6 +16,7 @@ function Tarefas() {
     descricao: "",
     responsavel: "",
     prazo: "",
+    finalizado: false,
   });
 
   const [tarefas, setTarefas] = useState([]);
@@ -31,6 +32,7 @@ function Tarefas() {
         responsavel: item.funcionario_nome || "Sem responsável",
         funcionario_id: item.funcionario_id,
         prazo: formatarDataBR(item.prazo),
+        finalizado: Boolean(item.finalizado),
         prazoInput: item.prazo ? item.prazo.substring(0, 10) : "",
       }));
 
@@ -57,6 +59,7 @@ function Tarefas() {
         responsavel: item.funcionario_nome || "Sem responsável",
         funcionario_id: item.funcionario_id,
         prazo: formatarDataBR(item.prazo),
+        finalizado: Boolean(item.finalizado),
         prazoInput: item.prazo ? item.prazo.substring(0, 10) : "",
       }));
 
@@ -75,6 +78,7 @@ function Tarefas() {
       descricao: "",
       responsavel: "",
       prazo: "",
+      finalizado: false,
     });
 
     setModoEdicao(false);
@@ -99,6 +103,7 @@ function Tarefas() {
           descricao: tarefa.descricao,
           funcionario_id: tarefa.responsavel,
           prazo: tarefa.prazo,
+          finalizado: tarefa.finalizado,
         });
 
         alert("Tarefa editada com sucesso!");
@@ -108,6 +113,7 @@ function Tarefas() {
           descricao: tarefa.descricao,
           funcionario_id: tarefa.responsavel,
           prazo: tarefa.prazo,
+          finalizado: tarefa.finalizado,
         });
 
         alert("Tarefa criada no banco!");
@@ -201,6 +207,17 @@ function Tarefas() {
             }
           />
 
+          <label className="checkTarefaFinalizada">
+            <input
+              type="checkbox"
+              checked={Boolean(tarefa.finalizado)}
+              onChange={(event) =>
+                setTarefa({ ...tarefa, finalizado: event.target.checked })
+              }
+            />
+            Finalizada
+          </label>
+
           <button className="btnAdicionar" onClick={salvarTarefa}>
             {modoEdicao ? "Editar" : "Adicionar"}
           </button>
@@ -219,6 +236,7 @@ function Tarefas() {
               <th className="th">Descrição</th>
               <th className="th">Responsável</th>
               <th className="th">Prazo</th>
+              <th className="th">Finalizada</th>
               <th className="th">Ações</th>
             </tr>
           </thead>
@@ -229,7 +247,8 @@ function Tarefas() {
                 return (
                   t.titulo.toLowerCase().includes(termoBusca) ||
                   t.descricao.toLowerCase().includes(termoBusca) ||
-                  t.responsavel.toLowerCase().includes(termoBusca)
+                  t.responsavel.toLowerCase().includes(termoBusca) ||
+                  t.finalizado.toString().includes(termoBusca)
                 );
               })
               .map((tarefaAtual) => (
@@ -238,6 +257,7 @@ function Tarefas() {
                   <td className="td">{tarefaAtual.descricao}</td>
                   <td className="td">{tarefaAtual.responsavel}</td>
                   <td className="td">{tarefaAtual.prazo}</td>
+                  <td className="td">{tarefaAtual.finalizado ? "Sim" : "Não"}</td>
                   <td className="td">
                     <div className="acoes">
                       <button
@@ -250,6 +270,7 @@ function Tarefas() {
                             descricao: tarefaAtual.descricao,
                             responsavel: String(tarefaAtual.funcionario_id),
                             prazo: tarefaAtual.prazoInput,
+                            finalizado: tarefaAtual.finalizado,
                           });
                         }}
                       >
@@ -268,7 +289,7 @@ function Tarefas() {
 
             {tarefas.length === 0 && (
               <tr className="tabelaLinha">
-                <td className="td" colSpan={5} style={{ color: "#777" }}>
+                <td className="td" colSpan={6} style={{ color: "#777" }}>
                   Nenhuma tarefa cadastrada
                 </td>
               </tr>

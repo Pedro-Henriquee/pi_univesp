@@ -11,6 +11,7 @@ router.get("/tarefas", async (req, res) => {
         tarefas.descricao,
         tarefas.funcionario_id,
         tarefas.prazo,
+        tarefas.finalizado,
         funcionarios.nome AS funcionario_nome
       FROM tarefas
       LEFT JOIN funcionarios ON tarefas.funcionario_id = funcionarios.id`
@@ -24,13 +25,16 @@ router.get("/tarefas", async (req, res) => {
 
 router.post("/tarefas/criar", async (req, res) => {
   const { titulo, descricao, funcionario_id, prazo } = req.body;
+  const finalizado = typeof req.body.finalizado === "boolean"
+    ? req.body.finalizado
+    : false;
 
   try {
     const result = await pool.query(
-      `INSERT INTO tarefas (titulo, descricao, funcionario_id, prazo) 
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO tarefas (titulo, descricao, funcionario_id, prazo, finalizado)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
-      [titulo, descricao, funcionario_id || null, prazo]
+      [titulo, descricao, funcionario_id || null, prazo, finalizado]
     );
 
     res.status(201).json(result.rows[0]);
@@ -41,7 +45,7 @@ router.post("/tarefas/criar", async (req, res) => {
 
 router.put("/tarefas/:id", async (req, res) => {
   const { id } = req.params;
-  const { titulo, descricao, funcionario_id, prazo } = req.body;
+  const { titulo, descricao, funcionario_id, prazo, finalizado } = req.body;
 
   try {
     const result = await pool.query(
@@ -49,10 +53,11 @@ router.put("/tarefas/:id", async (req, res) => {
        SET titulo = $1,
            descricao = $2,
            funcionario_id = $3, 
-           prazo = $4 
-       WHERE id = $5
+             prazo = $4,
+             finalizado = COALESCE($5, finalizado)
+           WHERE id = $6
        RETURNING *`,
-      [titulo, descricao, funcionario_id, prazo, id]
+          [titulo, descricao, funcionario_id, prazo, finalizado ?? null, id]
     );
 
     if (result.rowCount === 0) {

@@ -45,7 +45,7 @@ function Login() {
       inputSenha.current.value = "";
 
       navigate("/visao-geral");
-    } catch (error) {
+    } catch {
       alert("Usuário não encontrado!");
     } finally {
       setCarregando(false);

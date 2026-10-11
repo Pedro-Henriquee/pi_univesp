@@ -82,6 +82,21 @@
   width: 150px;
 }
 
+.checkTarefaFinalizada {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #444;
+  font-size: 14px;
+}
+
+.checkTarefaFinalizada input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #16a34a;
+}
+
 .btnAdicionar {
   padding: 10px 20px;
   background: #3b9fd1;
