@@ -1,0 +1,97 @@
+.minhaEscalaPage {
+  width: min(100%, 920px);
+  margin: 0 auto;
+  color: #172033;
+}
+
+.minhaEscalaHeader {
+  margin-bottom: 24px;
+}
+
+.minhaEscalaEyebrow {
+  margin: 0 0 8px;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.minhaEscalaHeader h1 {
+  margin: 0;
+  color: #172033;
+  font-size: clamp(1.7rem, 3vw, 2.25rem);
+}
+
+.minhaEscalaHeader > p:last-child {
+  margin: 8px 0 0;
+  color: #64748b;
+}
+
+.minhaEscalaLista {
+  display: grid;
+  gap: 12px;
+}
+
+.minhaEscalaDia {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 68px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 20px;
+  background: #fff;
+  box-shadow: 0 4px 18px rgb(15 23 42 / 4%);
+}
+
+.minhaEscalaDia h2 {
+  margin: 0;
+  color: #334155;
+  font-size: 1rem;
+}
+
+.minhaEscalaDia p {
+  margin: 0;
+  color: #1d4ed8;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.minhaEscalaDia.diaFolga {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.minhaEscalaDia.diaFolga p {
+  color: #15803d;
+}
+
+.minhaEscalaDia p.minhaEscalaSemHorario {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.minhaEscalaEstado,
+.minhaEscalaErro {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: #fff;
+  color: #64748b;
+}
+
+.minhaEscalaErro {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+@media (max-width: 520px) {
+  .minhaEscalaDia {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+}

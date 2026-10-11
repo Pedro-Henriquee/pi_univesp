@@ -13,6 +13,10 @@ export function setUsuarioLogado(usuario) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(usuario));
 }
 
+export function limparUsuarioLogado() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
 export function isAdmin(usuario = getUsuarioLogado()) {
   return !usuario || usuario.is_admin === true;
 }

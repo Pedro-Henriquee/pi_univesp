@@ -5,14 +5,20 @@ import { isAdmin } from "../../utils/session";
 function Sidebar({ ativo, usuario }) {
   const itensMenuAdmin = [
     { nome: "Visão geral", href: "/visao-geral" },
+    { nome: "Minha escala", href: "/minha-escala" },
     { nome: "Gestão de Funcionários", href: "/funcionarios" },
     { nome: "Gestão de Escalas", href: "/escalas" },
     { nome: "Gestão de Tarefas", href: "/tarefas" },
+    {nome: "Checklist", href: "/checklist"},
   ];
 
   const itensMenu = isAdmin(usuario)
     ? itensMenuAdmin
-    : itensMenuAdmin.filter((item) => item.href === "/visao-geral");
+    : itensMenuAdmin.filter((item) =>
+        item.href === "/visao-geral" ||
+        item.href === "/minha-escala" ||
+        item.href === "/checklist"
+      );
 
   return (
     <div className="sidebarContainer">

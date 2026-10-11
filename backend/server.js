@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config(); 
 
-const pool = require('./db');
+const pool = require("./db");
 
 const app = express();
 
@@ -13,6 +13,7 @@ app.use('/auth', require('./routes/auth'));
 app.use('/funcionarios', require('./routes/funcionarios'));
 app.use('/escalas', require('./routes/escalas'));
 app.use('/tarefas', require('./routes/tarefas'));
+app.use('/checklist', require('./routes/checklist'));
 
 app.get('/test-db', async (req, res) => {
   try {

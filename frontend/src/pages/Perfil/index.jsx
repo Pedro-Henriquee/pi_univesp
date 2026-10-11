@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import api from "../../services/api";
 import avatar from "../../assets/avatar.png";
-import { getUsuarioLogado, setUsuarioLogado } from "../../utils/session";
+import { getUsuarioLogado, limparUsuarioLogado, setUsuarioLogado } from "../../utils/session";
 import "./index.css";
 
 function VerPerfil() {
@@ -91,6 +91,11 @@ function VerPerfil() {
     }
   }
 
+  function sair() {
+    limparUsuarioLogado();
+    navigate("/login", { replace: true });
+  }
+
   if (!usuario) {
     return (
       <div className="perfilPage">
@@ -161,6 +166,9 @@ function VerPerfil() {
               X
             </button>
           </div>
+          <button className="btnSair" onClick={sair}>
+            SAIR
+          </button>
         </aside>
       </main>
     </div>
